@@ -20,3 +20,26 @@ The second section implements a linear search on an array of integers.
 The final section implements a recursive factorial calculation.
 - **Functionality**: Calculates the factorial of a given number `n` (in this case, 5) and stores the result in memory.
 - **RISC-V Assembly**: Provides a detailed look at how the stack is used to maintain state during recursion. For every recursive call, the return address (`x1`) and current argument (`x10`) are pushed onto the stack. After the base case is reached, the stack is popped to retrieve the values and multiply them together as the recursion unwinds.
+
+## Lab 2
+
+The files for Lab 2 are located in the `LAB2/` directory, accompanied by the lab manual (`Lab 2.pdf`). This lab focuses on array traversal, pointer arithmetic, and accumulation across various data bit-widths (32-bit words, 16-bit halfwords, and 8-bit bytes) in RISC-V (RV32), as well as multi-variable arithmetic expression evaluation.
+
+### 1. Addition of N 32-bit Numbers (`code_1.s`)
+- **Functionality**: Accumulates an array of $N = 5$ 32-bit integers defined as `.word` in memory.
+- **RISC-V Assembly**: Demonstrates base address loading with `la`, 32-bit memory access with `lw`, word alignment stepping with `addi x1, x1, 4`, loop control with `bne`, and storing the final sum to memory using `sw`.
+
+### 2. Addition of N 16-bit Numbers (`code_2.s`)
+- **Functionality**: Accumulates an array of $N = 5$ 16-bit integers defined as `.half` in memory.
+- **RISC-V Assembly**: Demonstrates loading unsigned 16-bit halfwords with zero-extension using `lhu`, pointer stepping by 2 bytes with `addi x1, x1, 2`, loop branching, and storing the halfword result back to memory using `sh`.
+
+### 3. Addition of N 8-bit Numbers (`code_3.s`)
+- **Functionality**: Accumulates an array of $N = 5$ 8-bit integers.
+- **RISC-V Assembly**: Demonstrates loading unsigned byte values with zero-extension using `lbu`, byte stepping with `addi x1, x1, 1`, decrementing loop counter, and storing the byte sum into memory with `sb`.
+
+### 4. Arithmetic Expression Evaluation (`code_4.s`)
+- **Functionality**: Evaluates the arithmetic expression:
+  $$X = (Y + M) - (L - D) + (Z + C) - D$$
+  where operands $Y, M, L, D, Z, C$ are loaded from consecutive memory words.
+- **RISC-V Assembly**: Demonstrates sequential memory reads with immediate offsets (`lw`), register-level intermediate evaluations using `add` and `sub`, and storing the computed output $X$ back to memory using `sw`.
+
