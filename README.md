@@ -43,3 +43,24 @@ The files for Lab 2 are located in the `LAB2/` directory, accompanied by the lab
   where operands $Y, M, L, D, Z, C$ are loaded from consecutive memory words.
 - **RISC-V Assembly**: Demonstrates sequential memory reads with immediate offsets (`lw`), register-level intermediate evaluations using `add` and `sub`, and storing the computed output $X$ back to memory using `sw`.
 
+## Lab 3
+
+The files for Lab 3 are located in the `LAB3/` directory, accompanied by the lab manual (`Hamming.docx`). This lab focuses on error-detection and coding theory concepts implemented in RISC-V assembly, specifically a **2-out-of-5 code validator** and a **Hamming(12,8) code encoder**.
+
+### 1. 2-out-of-5 Code Checker (`code.s`)
+- **Functionality**: Validates whether a given 8-bit input qualifies as a valid 2-out-of-5 code — i.e., it has exactly **2 bits set** among the lower 5 bits and no higher bits set. Stores `0xFF` at the next memory location if valid, or `0x00` if invalid.
+- **RISC-V Assembly**:
+  - Uses `andi` with mask `0xffffffe0` to detect any stray upper bits, branching immediately to `notacode` if found.
+  - Iterates through the 5 lower bits using a shifting bit mask (`slli x4, x4, 1`) and counts set bits in `x1`.
+  - Compares the count to 2 using `bne`; stores `0xFF` on match via `sb`, or `0x00` on mismatch.
+  - Demonstrates conditional branching, loop control with a decrement counter (`addi x7, x7, -1`), and byte-level memory stores (`sb`).
+
+### 2. Hamming Code Encoder (`hamming.s`)
+- **Functionality**: Encodes an 8-bit data byte (`0xA2`) into a **12-bit Hamming(12,8) codeword** with 4 even-parity check bits (P1, P2, P4, P8). The resulting encoded value is stored at the next word location in memory.
+- **RISC-V Assembly**:
+  - Computes each parity bit (P1, P2, P4, P8) by XOR-ing the relevant data bits (selected via `srli` right-shifts), then isolating the result's LSB with `andi ... 1`.
+  - Each parity bit is shifted to its correct position in the 12-bit codeword using `slli` and OR-ed into the accumulator register `x10`.
+  - Data bits are then interleaved into the codeword by masking (`andi`), shifting (`slli`), and OR-ing them at positions D1–D8 (skipping parity positions 1, 2, 4, 8).
+  - Demonstrates bitwise manipulation, multi-step register accumulation, and structured encoding using shift/mask/OR patterns.
+  - The final 12-bit encoded word is stored to memory with `sw x10, 4(x1)`.
+
