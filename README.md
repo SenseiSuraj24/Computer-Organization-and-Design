@@ -64,3 +64,27 @@ The files for Lab 3 are located in the `LAB3/` directory, accompanied by the lab
   - Demonstrates bitwise manipulation, multi-step register accumulation, and structured encoding using shift/mask/OR patterns.
   - The final 12-bit encoded word is stored to memory with `sw x10, 4(x1)`.
 
+## Lab 4
+
+The files for Lab 4 are located in the `LAB4/` directory. This lab focuses on arithmetic operations in RISC-V assembly, including checking divisibility through repeated subtraction and vector multiply-accumulate recurrence evaluation using the RISC-V "M" extension.
+
+### 1. Divisibility Check by Repeated Subtraction (`code_1.s`)
+- **Functionality**: Checks whether a given integer $A$ (e.g., 19) is divisible by a divisor (9) without relying on hardware division instructions. Sets a flag in register `a0` to `1` if divisible, or `0` if not divisible.
+- **RISC-V Assembly**:
+  - Loads the operand $A$ from memory using `la` and `lw`.
+  - Initializes the result/flag `a0` to `1`.
+  - Uses repeated subtraction (`addi x5, x5, -9`) in a loop until the remaining value is less than 1 (`blt x5, a0, exit`).
+  - Evaluates the remainder: if $x5 == 0$, keeps `a0 = 1`; otherwise sets `a0 = 0`.
+  - Demonstrates iterative conditional branching (`blt`, `beq`) and flag register management.
+
+### 2. Array Multiply-Accumulate Recurrence (`code_2.s`)
+- **Functionality**: Evaluates the recurrence relation:
+  $$c[i] = a[i] \times b[i] + c[i-1] \quad \text{for } 0 \le i < 10$$
+  over two 10-element integer arrays $a$ and $b$, storing accumulated outputs into array $c$.
+- **RISC-V Assembly**:
+  - Utilizes a sentinel word `c_minus_1` defined immediately before array `c` in the `.data` segment so reading $c[-1]$ at $i = 0$ safely returns `0` via negative offset addressing (`lw x15, -4(x13)`) without branching overhead.
+  - Dynamically calculates word offsets using logical shift left (`slli x5, x11, 2` for $i \times 4$) and computes effective element addresses.
+  - Multiplies corresponding elements using the `mul` instruction (RISC-V "M" extension).
+  - Demonstrates structured loop indexing (`bge`, `addi`), memory loads/stores (`lw`, `sw`), and system termination via `ecall`.
+
+
