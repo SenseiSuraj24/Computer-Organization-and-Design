@@ -87,4 +87,24 @@ The files for Lab 4 are located in the `LAB4/` directory. This lab focuses on ar
   - Multiplies corresponding elements using the `mul` instruction (RISC-V "M" extension).
   - Demonstrates structured loop indexing (`bge`, `addi`), memory loads/stores (`lw`, `sw`), and system termination via `ecall`.
 
+## Lab 5
+
+The files for Lab 5 are located in the `LAB5/` directory. This lab focuses on in-place array algorithms in RISC-V assembly: **bubble sort** and a **linear scan for the smallest and largest values**.
+
+### 1. Bubble Sort (`code_1.s`)
+- **Functionality**: Sorts an array of $N = 5$ 32-bit integers (`25, 56, 0, 10, 20`) **in place in ascending order** using bubble sort. Adjacent elements are compared and swapped until the array is ordered.
+- **RISC-V Assembly**:
+  - Nested loops: the outer loop index $i$ runs until $i \ge n$; the inner loop runs $j$ from $0$ to $n - i - 1$.
+  - Computes word addresses with `slli` (`j \times 4`) and `add` from the array base, then loads `arr[j]` and `arr[j+1]` with `lw`.
+  - Swaps when `arr[j+1] < arr[j]` (`bge` skips the swap when the pair is already in order), using a temporary register and two `sw` stores.
+  - Demonstrates nested loop control (`bge`, `j`), pointer arithmetic, and in-place memory updates.
+
+### 2. Smallest and Largest in an Array (`code_2.s`)
+- **Functionality**: Finds the **smallest** and **largest** values in an array of $N = 5$ integers (`25, 56, 0, 10, 20`) and stores them in consecutive memory words immediately after the array (`result[0]` = smallest, `result[1]` = largest).
+- **RISC-V Assembly**:
+  - Initializes both running min and max from `arr[0]`, then scans from index $i = 1$ to $n - 1`.
+  - Uses `blt` to update the current smallest and `bgt` to update the current largest.
+  - Writes the results with `sw` at `result` and `result + 4`.
+  - Demonstrates a single-pass linear scan, conditional updates, and storing derived results next to the source array.
+
 
